@@ -25,20 +25,23 @@ int octalToHexadecimal(long int num)
 		return 0;
 	}
 	//convert octal to decimal
-	int octtemp=0,dec=0;
+	int octtemp = 0, dec = 0, power = 1;;
 	for (int i = 0; num > 0; i++)
 	{
 		octtemp = num % 10;
-		dec += octtemp*pow(8, i);
+		dec += octtemp*power;
+		power *= 8;
 		num /= 10;
 	}
-	int count = 0,hextemp=0,hex=0;
+	int hextemp=0,hex=0;
+	power = 1;
 	while (dec)
 	{
 		hextemp = dec % 16;
-		hex = hex + (hextemp*pow(10, count));
+		hex = hex + (hextemp*power);
 		dec /= 16;
-		count++;
+		
+		power *= 10;
 	}
 	/*float temp;
 	char *hex,*h,*rt;

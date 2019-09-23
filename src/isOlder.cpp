@@ -12,18 +12,40 @@ ERROR CASES: Return -1 if any DOB is invalid.
 
 NOTES: 		Don't use any built-in C functions for comparisions. You are free to write any helper functions.
 */
-bool validate(char *dob1, char *dob2, int *y1, int *y2, int *d1, int *d2, int *m1, int *m2)
+bool validatemonth(char *dob1, char *dob2, int *m1, int *m2)
 {
-	if ((dob1&& dob1+1) &&(dob2 && dob2+1))
+	if (((dob1 + 3 && *(dob1 + 3) != '-') && (dob1 + 4 && *(dob1 + 4) != '-')) && ((dob2 + 3 && *(dob2 + 3) != '-') && (dob2 + 4 && *(dob2 + 4) != '-')))
+	{
+		if ((dob1 + 5 && *(dob1 + 5) == '-') && (dob2 + 5 && *(dob2 + 5) == '-'))
+		{
+			return true;
+		}
+		else return false;
+	}
+	else return false;
+}
+bool validatedate(char *dob1, char *dob2, int *d1, int *d2)
+{
+	if ((dob1&& dob1 + 1) && (dob2 && dob2 + 1))
 	{
 		if ((*dob1 != '-' && *(dob1 + 1) != '-') && (*dob2 != '-' && *(dob2 + 1) != '-'))
 		{
-			if ((dob1+2 &&*(dob1 + 2) == '-') &&(dob2+2 && *(dob2 + 2) == '-'))
+			if ((dob1 + 2 && *(dob1 + 2) == '-') && (dob2 + 2 && *(dob2 + 2) == '-'))
 			{
-				if (((dob1 + 3 && *(dob1 + 3) != '-') &&(dob1+4 &&*(dob1+4)!='-')) && ((dob2 + 3 && *(dob2 + 3) != '-') && (dob2 + 4 && *(dob2 + 4) != '-')))
-				{
-					if ((dob1 + 5 && *(dob1 + 5) == '-') && (dob2 + 5 && *(dob2 + 5) == '-'))
-					{
+				return true;
+			}
+			else
+				return false;
+		}
+		else
+			return false;
+	}
+	else return false;
+
+
+}
+bool validateyear(char *dob1, char *dob2, int *y1, int *y2,int *d1,int *d2,int *m1,int *m2)
+{
 						if (((dob1 + 6 && *(dob1 + 6) != '-') && (dob1 + 7 && *(dob1 + 7) != '-')) && ((dob2 + 6 && *(dob2 + 6) != '-') && (dob2 + 7 && *(dob2 + 7) != '-')) && ((dob1 + 8 && *(dob1 + 8) != '-') && (dob1 + 9 && *(dob1 + 9) != '-')) && ((dob2 + 8 && *(dob2 + 8) != '-') && (dob2 + 9 && *(dob2 + 9) != '-')))
 						{
 							*d1 = ((*dob1 - 48)*10)+(*(dob1+1)-48);
@@ -62,27 +84,12 @@ bool validate(char *dob1, char *dob2, int *y1, int *y2, int *d1, int *d2, int *m
 								return true;
 						}
 						else return false;
-					}
-					else return false;
-				}
-				else return false;
-			}
-			else
-				return false;
-		}
-		else
-			return false;
-	}
-	else return false;
-	
-
-
 }
 
 int isOlder(char *dob1, char *dob2) 
 {
 	int year1,year2, date1,date2, month1,month2;
-	if (validate(dob1, dob2, &year1, &year2, &date1, &date2, &month1, &month2))
+	if ((validatedate(dob1, dob2, &date1, &date2) && validatemonth(dob1, dob2, &month1, &month2)) && validateyear(dob1, dob2, &year1, &year2,&date1,&date2,&month1,&month2))
 	{
 		if (year1 > year2)
 		{

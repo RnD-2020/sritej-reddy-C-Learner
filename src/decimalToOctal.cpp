@@ -21,11 +21,12 @@ int decimalToOctal(int num)
 {
 	if (num < 0)
 		return 0;
-	int octal=0,count=0,temp=0;
+	int octal=0,count=0,temp=0,tenpow=1;
 	while(num>0)
 	{
 		temp = num % 8;
-		octal = octal + (temp*pow(10, count));
+		octal = octal + (temp*tenpow);
+		tenpow *= 10;
 		num /= 8;
 		count++;
 	}

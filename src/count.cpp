@@ -22,10 +22,10 @@ int count(int num1, int num2) {
 		return 0;
 	if (num1 > num2)
 		return 1;
-	for (int i = num1; i <= num2; i++)
+	/*for (int i = num1; i <= num2; i++)
 	{
 		if (i%num1 == 0)
 			count++;
-	}
-	return count;
+	}*/
+	return num2/num1;
 }

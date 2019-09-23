@@ -19,7 +19,7 @@ DONT CHANGE THE FUNCTION HEADERS.
 
 #include <stdio.h>
 
-long fact(int num)
+/*long fact(int num)
 {
 	long fact = 1;
 	int i;
@@ -32,7 +32,7 @@ long fact(int num)
 		fact *= i;
 	}
 	return fact;
-}
+}*/
 int countFactorials(long l, long h)
 {
 	if ((l < 0 || h < 0) || l > h)
@@ -40,14 +40,16 @@ int countFactorials(long l, long h)
 		return -1;
 	}
 	int count=0;
-	long i=0;
+	long i=1,f=1;
 	while(1)
 	{
-		if(fact(i)>=l && fact(i)<=h)
+		if(f>=l && f<=h)
 		count++;
-		if (fact(i) > h)
+		if (f > h)
 			break;
+		f = f*i;
 		i++;
+		
 	}
 	
 	return count;

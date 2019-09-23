@@ -32,6 +32,7 @@ int countOnes(int number)
 		number = number*(-1);
 	while(i%number!=0)
 	{
+		i = i%number;
 		count++;
 		i*=10;
 		i+=1;

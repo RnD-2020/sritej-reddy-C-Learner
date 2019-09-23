@@ -53,17 +53,73 @@ unsigned int swapBits(unsigned int number, int p1, int p2, int n)
 	{
 		return 0;
 	}
-	unsigned int bin=0;
-	int size=0;
+	if (number == 0)
+	{
+		return 0;
+	}
+	unsigned int bin=0,t1,t2,rem;
+	int size = 0, power = 1,i=0, count = 0,noofzeros;
 	//finding binary equivalent
 	while (number >0)
 	{
-		bin += ((number%2)*pow(10, size++));
+		bin += ((number%2)*power);
+		count++;
+		/*if (number / 2==0)
+		{
+			if ((noofzeros = (p2 + n) - count) > 0)
+				number = number*(noofzeros * 10);
+		}*/
+		power *= 10;
 		number /= 2;
 	}
+	int tenpow1=pow(10,p1), tenpow2 = pow(10, p2);
+	for (i = 0; i < n; i++)
+	{
+		if (bin / tenpow1 == 0)
+		{
+			t1 = 0;
+		}
+		else {
+			t1 = bin / tenpow1;
+			t1 = t1 % 10;
+		}
+		if (bin / tenpow2 == 0)
+			t2 = 0;
+		else {
+			t2 = bin / tenpow2;
+			t2 = t2 % 10;
+		}
+
+
+		rem = bin % tenpow1;
+		bin = bin / (tenpow1 * 10);
+		bin = (bin * 10) + t2;
+		bin = (bin*tenpow1) + rem;
+
+		rem = bin % tenpow2;
+		bin = bin / (tenpow2 * 10);
+		bin = (bin * 10) + t1;
+		bin = (bin*tenpow2) + rem;
+
+		tenpow1 *= 10;
+		tenpow2 *= 10;
+	}
+
+
+
+
+
+
+	/*
+
 	if (p2 + n > size)
 	{
 			size = p2 + n;
+	}
+
+	if (noofzeros > 0)
+	{
+		
 	}
 
 	//i am using pointers becoz array[size] is not accepted in vs where size is a variable
@@ -72,7 +128,6 @@ unsigned int swapBits(unsigned int number, int p1, int p2, int n)
 	{
 		if (bin != 0)
 		{
-			
 			ar[i] = (bin % 10);
 			bin /= 10;
 		}
@@ -86,12 +141,17 @@ unsigned int swapBits(unsigned int number, int p1, int p2, int n)
 		ar[p1] = ar[p2];
 		ar[p2] = temp;
 	}
+	//change till here	
 	if (size > 32)
-		size = 32;
+		size = 32;*/
 	unsigned int dec_res=0;
-	for (int i = 0; i < size; i++)
+	int twopow = 1;
+	while(bin)
 	{
-		dec_res += ar[i] * pow(2, i);
+		dec_res += (bin % 10) * twopow;
+		twopow *= 2;
+
+		bin /= 10;
 	}
 	return dec_res;
 }

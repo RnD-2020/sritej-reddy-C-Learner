@@ -54,16 +54,16 @@ int nthPrime(int num)
 	{
 		return -1;
 	}
-	int count = 1,i=2,prime;
+	int count = 2,i=3,prime;
 	while (count <= num)
 	{
+		if(i%2!=0 )
 		if (isprime(i))
 		{
 			prime = i;
 			count++;
 		}
 		i++;
-
 	}
 	return prime;
 }

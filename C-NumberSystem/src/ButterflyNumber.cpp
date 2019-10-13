@@ -6,7 +6,7 @@ return -1 if it is not possible create a butterfly number for the given input
 */
 long long butterFlyNumber(long long N)
 {
-	/*(this is checked in while loop) for a long long data type max value that can be stored is 18446744073709551615(20 digits)
+	/*condition checked in while loop-> for a long long data type max value that can be stored is 18446744073709551615(20 digits)
 	so i am checking if result till now has reached till 1000000000000000000(19 digits)
 	if yes then if still N has more than 1 digit then we will be returning -1, because
 	As there are more than one digits in N adding them to result will definetly cross 20 digits.

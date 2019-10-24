@@ -24,6 +24,35 @@ void rightShift(int a[],int n,int pos)
 	}
 	a[0] = 0;
 }
+int extendArray(int carry, int count, int factorialDigits[])
+{
+	int no_of_digits_in_carry = noOfDigits(carry);
+	rightShift(factorialDigits, count, no_of_digits_in_carry);
+	count += no_of_digits_in_carry;
+	while (carry)
+	{
+		factorialDigits[(no_of_digits_in_carry--) - 1] = carry % 10;
+		carry /= 10;
+	}
+	return count;
+}
+int multiplyToAArrayEle(int factorialDigits[], int i,int n)
+{
+	int carry = 0,temp;
+	int count = i;
+	while (i >= 0)
+	{
+		temp = (factorialDigits[i] * n) + carry;
+		carry = temp / 10;
+		factorialDigits[i] = temp % 10;
+		if (i == 0 && carry)
+		{
+			count=extendArray(carry, count, factorialDigits);
+		}
+		i--;
+	}
+	return count;
+}
 int factorialOfN(int n, int factorialDigits[158]) {
 	//i am stroing result in an array and at every iteration if carry occurs while multiplying the last
 	// digits (first digit in array at position 0) then i am rightshifting by one place and appending that carry
@@ -31,33 +60,13 @@ int factorialOfN(int n, int factorialDigits[158]) {
 	factorialDigits[0] = 1;
 	if (n == 0 || n == 1)
 		return 1;
-	int i = 0, count = 0, temp = 0, carry = 0;
+	int i = 0;
 	while (n>1)
 	{
-		count = i;
-		while (i >= 0)
-		{
-			temp = (factorialDigits[i] * n) + carry;
-			carry = temp / 10;
-			factorialDigits[i] = temp % 10;
-			if (i == 0 && carry)
-			{
-				int no_of_digits_in_carry = noOfDigits(carry);
-				rightShift(factorialDigits, count,no_of_digits_in_carry);
-				count+=no_of_digits_in_carry;
-				while (carry)
-				{
-					factorialDigits[(no_of_digits_in_carry--) - 1] = carry % 10;
-					carry /= 10;
-				}
-			}
-			i--;
-		}
-		carry = 0;
-		i = count;
+		i = multiplyToAArrayEle(factorialDigits, i, n);
 		n--;
 	}
-	return count + 1;
+	return i + 1;
 }
 
 

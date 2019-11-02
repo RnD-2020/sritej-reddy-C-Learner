@@ -28,14 +28,15 @@ char* function0(int n) {
 	for (i = 0; i < n; i++) {
 
 	}
-
+	/*O(n) because statements inside loop run for n times*/
 	return "O(n)";
 }
 
 char* function1(int n) {
 	int i, j;
 	for (i = 0, j = n; i < j; i *= 2, j /= 2);
-
+	/*O(logn base 2) because i is zero always ways (if i gets incremented then also same complexity ) and j is getting decremented by half every time
+	and runs for logj times only(until j hits 0) */
 	return "O(logn)";
 }
 
@@ -47,7 +48,7 @@ char* function2(int n) {
 	for (i = 0; i<6 * n; ++i) {
 		//some other code
 	}
-
+	/*first loop runs for n times and second for 6*n times so total is n+(6*n) we take O(n)*/
 	return "O(n)";
 }
 
@@ -58,7 +59,7 @@ char* function3(int n) {
 			//some code
 		}
 	}
-
+	/*for each i in first loop the second loop runs for n/i times( n + n/2 + n/3 +..n/n) so total is n*logn */
 	return "O(n*logn)";
 }
 
@@ -74,6 +75,7 @@ int digit_count(int number) {
 
 char* function4(int number) {
 	digit_count(number);
+	/*runs for number of digits in number times so O(n)*/
 	return "O(n)";
 }
 
@@ -95,6 +97,7 @@ void randomSort(int *arr, int n) {
 
 char* function5(int *arr, int size) {
 	randomSort(arr, size);
+	/*runs for n(n+1)/2 times */
 	return "O(n*n)";
 }
 
@@ -108,6 +111,7 @@ int factorial(int n) {
 
 char* function6(int n) {
 	factorial(n);
+	/*because it loop in function runs for n-2 and it is O(n)*/
 	return "O(n)";
 }
 
@@ -124,6 +128,7 @@ int reverse(int number) {
 
 char* function7(int number) {
 	reverse(number);
+	/*same as digit_count() function loop runs for number of digits in number times*/
 	return "O(n)";
 }
 
@@ -137,6 +142,7 @@ char* function8(int n) {
 			}
 		}
 	}
+	/*first loop runs for n times and second for logn third for constant time(1000 times)*/
 	return "O(n*logn)";
 }
 
@@ -147,6 +153,7 @@ char* function9(int n) {
 			//some code
 		}
 	}
+	/*first loop runs for logn times and second for n*n times*/
 	return "O(n*n*logn)";
 }
 
@@ -165,6 +172,8 @@ char* function10(int n) {
 			//some O(1) tasks
 		}
 	}
+	/*first loop runs for n/2 times 
+	second for 10^i times so n^n */
 	return "O(n^n)";
 }
 
@@ -186,6 +195,9 @@ void remove_dup(int *arr, int size){
 
 char* function11(int *array, int size) {
 	remove_dup(array, size);
+	/* first loop runs for n times and second for n times ..and also third loop inside a condition also runs for n times
+	worst case is O(n*n*n). I think answer is O(n*n*n) but is it O(n*n)?
+	best and average case can be n*n */
 	return "O(n*n)";
 }
 
@@ -204,6 +216,7 @@ int find_min_sum(int *array, int size) {
 
 char* function12(int *array, int size) {
 	find_min_sum(array, size);
+	/*two loops are running and second runs for n(n+1)/2 times*/
 	return "O(n*n)";
 }
 
@@ -222,6 +235,7 @@ float calculate_sd(float *array, int size) {
 
 char* function13(float* array, int size) {
 	calculate_sd(array, size);
+	/*two loops are running separately each for n times */
 	return "O(n)";
 }
 
@@ -236,9 +250,6 @@ int negative_sum(int *array, int size) {
 
 char* function14(int *array, int size) {
 	negative_sum(array, size);
+	/*loop runs for n times */
 	return "O(n)";
 }
-
-
-
-

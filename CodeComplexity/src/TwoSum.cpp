@@ -43,7 +43,7 @@ using namespace std;
 Take each element, Sum with all other elements.
 Repeat it with all elements.
 
-What is the complexity of this method ? __________
+What is the complexity of this method ? ____O(n*n)______
 */
 
 void storeResult(int *res, int n1, int n2)
@@ -90,7 +90,7 @@ Lets say sorted array is [3,4,5,7,10,12] and required sum is 11.
 Lets say we added 3+12 first, whats the sum, Its 15 right ? Its greater than 11.So should we next add 
 so that total sum will become less. 
 
-What is the complexity of this method ? __________
+What is the complexity of this method ? ____O(n*n)______
 */
 
 void searchTwoSum(int *nums, int target, int len, int *res)
@@ -102,16 +102,16 @@ void searchTwoSum(int *nums, int target, int len, int *res)
 			storeResult(res, nums[i], nums[j]);
 			break;
 		}
-		if (nums[i] + nums[j] < target)
+		if (i<j &&  nums[i] + nums[j] < target)
 		{
 				i++;
-			while(nums[i]==nums[i-1])
+			while(nums[i] == nums[i-1] )
 				i++;
 		}
-		if (nums[i] + nums[j] > target)
+		if (i<j && nums[i] + nums[j] > target)
 		{
 			j--;
-			while (nums[j] == nums[j + 1])
+			while ( nums[j] == nums[j + 1] )
 				j--;
 		}
 	}
@@ -166,8 +166,8 @@ int* sumoftwoExtraArray(int *nums, int target, int len) {
 			res[1] = nums[i];
 			return res;
 		}
-		while (nums[i] == nums[i + 1])  // This should not be considered for complexity, without this loop also we get result but this loop eliminates checking with repeated numbers
-			i++;   //ex: {0,0,0,1,2} first when entering for loop we point at 0th pos and when it hits while loop i is incremented till element 1..
+		while (nums[i] == nums[i + 1])  //without this loop also we get result but this loop eliminates checking with repeated numbers every time
+			i++;   //ex: {0,0,0,1,2} In first iteration of for loop we point at 0th pos and when it hits while loop i is incremented till element 1..
 	}
 	/* In this we set 1 at position "element" in extra array for ex: suppose ele=2 then we set 1 at array[2] so that we can access at O(1) time
 	now when we get remaining value required later, we only check for target-nums[i] position in the array if it is 1 then we return the values

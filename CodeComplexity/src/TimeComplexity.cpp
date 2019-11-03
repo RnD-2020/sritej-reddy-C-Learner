@@ -195,9 +195,7 @@ void remove_dup(int *arr, int size){
 
 char* function11(int *array, int size) {
 	remove_dup(array, size);
-	/* first loop runs for n times and second for n times ..and also third loop inside a condition also runs for n times
-	worst case is O(n*n*n). I think answer is O(n*n*n) but is it O(n*n)?
-	best and average case can be n*n */
+	/* two loops run for n times so n*n if all the ele are same also(worst case) then also it runs for n*n times only*/
 	return "O(n*n)";
 }
 

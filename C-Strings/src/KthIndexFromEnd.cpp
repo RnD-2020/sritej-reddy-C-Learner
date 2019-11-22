@@ -12,7 +12,7 @@ NOTES:
 */
 #include<string.h>
 char KthIndexFromEnd(char *str, int K) {
-	if (!str || !strlen(str))
+	if (!str || !strlen(str) || K<0 || K>=strlen(str))
 		return '\0';
 	return str[strlen(str) - 1 - K];
 }

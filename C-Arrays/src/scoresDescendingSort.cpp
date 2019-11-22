@@ -20,6 +20,16 @@ struct student {
 	int score;
 };
 
+void fillMainArrWithSubArr(struct student *arr, struct student *left_arr, int *k,int *i,int size_of_left_arr)
+{
+	while (*i < size_of_left_arr)
+	{
+		arr[*k] = left_arr[*i];
+		*k = *k + 1;
+		*i = *i + 1;
+	}
+}
+
 void merge(struct student *students, int l, int m, int r)
 {
 	int i, j, k;
@@ -50,17 +60,13 @@ void merge(struct student *students, int l, int m, int r)
 		}
 		k++;
 	}
-	while (i < n1)
+	if (i < n1)
 	{
-		students[k] = L[i];
-		i++;
-		k++;
+		fillMainArrWithSubArr(students, L, &k, &i, n1);
 	}
-	while (j < n2)
+	if (j < n2)
 	{
-		students[k] = R[j];
-		j++;
-		k++;
+		fillMainArrWithSubArr(students, R, &k, &j, n2);
 	}
 }
 

@@ -24,6 +24,7 @@ void insertAtPos(int *Arr, int pos, int length,int num)
 	}
 	Arr[pos] = num;
 }
+
 int * sortedArrayInsertNumber(int *Arr, int len, int num)
 {
 	if (!Arr || len < 1)

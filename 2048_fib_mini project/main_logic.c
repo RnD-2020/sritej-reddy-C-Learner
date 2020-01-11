@@ -183,21 +183,29 @@ bool won(int *a,int n) {
 	return false;
 }
 
+bool mergebleByElementRightToCurrentEle(int *a,int n,int i,int j){
+	if(j!=n-1 && isMergeble( *((a+i*n) + j),  *((a+i*n) + j+1)))
+		return true;
+	printf("f");
+	return false;
+}
+
+bool mergebleByElementDownToCurrentEle(int *a,int n,int i,int j){
+	if(i!=n-1 && isMergeble( *((a+i*n) + j),  *((a+(i+1)*n) + j)))
+		return true;
+	
+	return false;
+}
+
 bool furtherMovePossible(int *a,int n) {
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < n; j++) {
-			if (i == n - 1 && j == n - 1) {
-				break;
-			} else if (i == n - 1) {
-				if (isMergeble( *((a+i*n) + j),  *((a+i*n) + j+1)))
-					return true;
-			} else if (j == n - 1) {
-				if (isMergeble( *((a+i*n) + j),  *((a+(i+1)*n) + j)))
-					return true;
-			} else if (isMergeble(*((a+i*n) + j),  *((a+i*n) + j+1)) || isMergeble(*((a+i*n) + j),  *((a+(i+1)*n) + j))) {
+			if(*(a+i*n + j)==0)  //this is if atleast one 0 is there then a move is possible so return true
 				return true;
-			}
+			else if (i == n - 1 && j == n - 1)
+				return false;
+			else if(mergebleByElementRightToCurrentEle(a,n,i,j) || mergebleByElementDownToCurrentEle(a,n,i,j))
+					return true;
 		}
 	}
-	return false;
 }

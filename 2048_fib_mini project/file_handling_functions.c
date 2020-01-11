@@ -6,9 +6,9 @@
 
 //function declarations
 bool checkIfNameExists(FILE *,char []);
-void storeInFile(char [],int ,int );
+void storeInFile(char [],int ,int ,char []);
 void storeNumberInFile(FILE *,int ,int ,int );
-void insertToFileFromThatPos(FILE *,char [],int ,int );
+void insertToFileFromThatPos(FILE *,char [],int ,int ,char []);
 void saveStateToFile(char [],int ,int ,int []);
 int* getStateFromFile(char [],int *,int *);
 int getANumberFromFile(FILE *);
@@ -22,7 +22,9 @@ void removeContentsOfResumeGame(){ //used just to remove data of resume game
 
 void getNameFromFile(FILE *fp,char name[]){ //stores the string from current fp position to name
 	int k=0;
-	char c=fgetc(fp);
+	char c;
+	fseek(fp,21,SEEK_CUR);
+	c=fgetc(fp);
 	while(c!=' '){
 		name[k++]=c;
 		c=fgetc(fp);
@@ -47,7 +49,7 @@ bool checkIfNameExists(FILE *fp,char name[]){
 	return 0;
 }
 
-void storeInFile(char name[],int moves,int board) { //stores details of player if wins in sorted way
+void storeInFile(char name[],int moves,int board,char date[]) { //stores details of player if wins in sorted way
 	FILE *fp;
 	if(!(fp=fopen("fib_leaderboard.txt","r+"))){ //this is true only for the first time the file gets created
 		fp=fopen("fib_leaderboard.txt","w");
@@ -56,10 +58,10 @@ void storeInFile(char name[],int moves,int board) { //stores details of player i
 		int t_moves;
 		char c,temp[100];
 		while(true){
-			fseek(fp,21,SEEK_CUR);
+			fseek(fp,32,SEEK_CUR);
 			t_moves=getANumberFromFile(fp);
 			if(t_moves>moves){ //this is true when we reach a row that has greater moves value than currect moves
-				fseek(fp,-25,SEEK_CUR);
+				fseek(fp,-36,SEEK_CUR);
 				break;
 			}
 			fgets(temp,100,fp);			
@@ -69,7 +71,7 @@ void storeInFile(char name[],int moves,int board) { //stores details of player i
 			else fseek(fp,-1,SEEK_CUR);
 		}
 	}
-	insertToFileFromThatPos(fp,name,moves,board);
+	insertToFileFromThatPos(fp,name,moves,board,date);
 }
 
 void storeNumberInFile(FILE *fp,int m,int ten_pow,int n){ 
@@ -82,13 +84,23 @@ void storeNumberInFile(FILE *fp,int m,int ten_pow,int n){
 	}
 }
 
+void storeStringInFile(FILE *fp,int n,char date[]){ 
+	int k=0;
+	while(n--){
+		if(date[k]!='\0'){
+			fputc(date[k++],fp);
+		}
+		else fputc(' ',fp);
+	}
+}
+
 int no_of_digits(int n){
 	if(n<10)
 		return 1;
 	return 1+no_of_digits(n/10);
 }
 
-void insertToFileFromThatPos(FILE *fp,char name[],int moves,int board){
+void insertToFileFromThatPos(FILE *fp,char name[],int moves,int board,char date[]){
 	FILE *t=fp;
 	char arr[10000];	//this is used to store rest of file from fp pos
 	char c=fgetc(fp);
@@ -100,13 +112,8 @@ void insertToFileFromThatPos(FILE *fp,char name[],int moves,int board){
 			c=fgetc(fp);
 		}
 	fseek(fp,-(k+1),SEEK_CUR);
-	n=21;
-	k=0;
-	while(n--){
-		if(name[k]!='\0')
-			fputc(name[k++],fp);
-		else fputc(' ',fp);
-	}
+	storeStringInFile(fp,21,date);
+	storeStringInFile(fp,21,name);
 	storeNumberInFile(fp,moves,pow(10,no_of_digits(moves)-1),4);
 	storeNumberInFile(fp,board,pow(10,no_of_digits(board)-1),3);
 	fputc('\n',fp);
@@ -115,6 +122,7 @@ void insertToFileFromThatPos(FILE *fp,char name[],int moves,int board){
 }
 
 void saveStateToFile(char name[],int moves,int board,int *a) { 
+	moves--;
 	FILE *fp=fopen("fib_state.txt","w");
 	int k=0;
 	while(name[k]!='\0'){

@@ -19,6 +19,8 @@ void generateOneRandomly(int *,int );
 bool won(int *,int );
 bool furtherMovePossible(int *,int );
 int* getDetailsFromUser(char [],int *);
+char* getDate(char []);
+void storeUser(char [],int *,int ,int);
 
 int main()
 {
@@ -28,7 +30,7 @@ int main()
 
 void startGame(){
 	int c;
-	printf("enter 1 - new game / 2 - resume game / 3 - leaderboard / any key to exit\n: ");
+	printf("\nenter 1 - new game / 2 - resume game / 3 - leaderboard / any key to exit\n: ");
 	scanf("%d",&c);
 	switch (c) {
 		case 1:
@@ -78,7 +80,7 @@ void getLeaderBoard() {
 	char arr[100];
 	char c;
 	int t=1; //t used to print SNO
-	printf("\nSNO\tNAME\t\t  MOVES  BOARD(n=n*n)\n\n");
+	printf("\nSNO\tDATE\t\t    NAME\t\t  MOVES BOARD(n=n*n)\n\n");
 	c=fgetc(fp);
 	while(c!=EOF && t<=20){
 		printf("%d  \t",t++);
@@ -135,24 +137,53 @@ void getName(char name[]) { //this reads the name from user until the name enter
 	}
 }
 
+char* getDate(char *date){
+	time_t t;
+	time(&t);
+	date=ctime(&t);
+	*(date+0)=*(date+8);
+	*(date+1)=*(date+9);
+	*(date+2)='-';
+	*(date+3)=*(date+4);
+	*(date+4)=*(date+5);
+	*(date+5)=*(date+6);
+	*(date+6)='-';
+	*(date+7)=*(date+20);
+	*(date+8)=*(date+21);
+	*(date+9)=*(date+22);
+	*(date+10)=*(date+23);
+	*(date+11)='\0';
+	return date;
+}
+
+void storeUser(char name[],int *a,int moves,int board){
+	char *date;
+	date=getDate(date);
+	storeInFile(name,moves,board,date);
+	removeContentsOfResumeGame();
+	printf("\t\twoo-ohh congrats you have won the game in %d moves\n",moves);
+}
+
 void playGame(char name[],int *a,int moves,int n) {
 	int c ;
 	while (true) {
 		system("cls");
 		printGame(name,moves,n,a);
 		if (won(a,n)) {
-			storeInFile(name,moves,n);
-			removeContentsOfResumeGame();
-			printf("\t\twoo-ohh congrats you have won the game\n");
+			storeUser(name,a,moves,n);
+			system("cls");
 			startGame();
 			break;
 		}
 		if (furtherMovePossible(a,n)==false) {
-			printf("\n\t\tGame Over\n");
+			printf("\n\t\tGame Over - you've lost in %d moves\n",moves);
+			removeContentsOfResumeGame();
+			system("cls");
 			startGame();
 			break;
 		}
 		moves++;
+		saveStateToFile(name,moves,n,a);
 		if((c=handleInputs(name,moves,n,a))==1){
 			startGame();
 			break;
@@ -186,14 +217,12 @@ bool won(int *a,int n) {
 bool mergebleByElementRightToCurrentEle(int *a,int n,int i,int j){
 	if(j!=n-1 && isMergeble( *((a+i*n) + j),  *((a+i*n) + j+1)))
 		return true;
-	printf("f");
 	return false;
 }
 
 bool mergebleByElementDownToCurrentEle(int *a,int n,int i,int j){
 	if(i!=n-1 && isMergeble( *((a+i*n) + j),  *((a+(i+1)*n) + j)))
 		return true;
-	
 	return false;
 }
 

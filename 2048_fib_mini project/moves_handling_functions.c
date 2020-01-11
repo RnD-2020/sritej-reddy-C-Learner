@@ -18,24 +18,18 @@ void removeZeroesOfRowsForRightMove(int *,int );
 void removeZeroesOfRowsForLeftMove(int *,int );
 
 int handleInputs(char name[],int moves,int n,int *a){
-	int c;
-	printf("enter 1 - UP / 2 - DOWN / 3 - RIGHT / 4 - LEFT\n\t\t\t 5 - save state of game\n: ");
-	scanf("%d",&c);
-	if (c == 1)
+	char c;
+	printf("enter w - UP / s - DOWN / d - RIGHT / a - LEFT\n\t\t\t any key to exit \n\t\t\tgame is saved automatically Don't worry \n: ");
+	scanf(" %c",&c);
+	if (c == 'w')
 		upMove(a,n);
-	else if (c == 2)
+	else if (c == 's')
 		downMove(a,n);
-	else if (c == 3)
+	else if (c == 'd')
 		rightMove(a,n);
-	else if (c == 4)
+	else if (c == 'a')
 		leftMove(a,n);
-	else if(c==5){
-		moves--;
-		saveStateToFile(name,moves,n,a);
-		printf("\n\n\t\tgame save successfully\n");
-		return 1;
-	}
-	else printf("enter correct option");
+	else return 1;
 	return 0;
 }
 

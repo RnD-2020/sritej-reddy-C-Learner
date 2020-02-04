@@ -1,11 +1,4 @@
-//fibonacci_checkers.c
-#include<stdio.h>
-#include<math.h>
-
-//functions declarations
-bool isMergeble(int , int );
-bool isFibonacci(int );
-bool isPerfectSquare(int );
+#include "function_declarations.h"
 
 bool isMergeble(int i, int j) {
 	if (j == 0)
@@ -22,4 +15,4 @@ bool isFibonacci(int n) {
 bool isPerfectSquare(int x) {
 	int s = sqrt(x);
 	return (s * s == x);
-}	
+}

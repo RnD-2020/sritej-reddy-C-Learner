@@ -23,20 +23,23 @@ void startGame() {
 	}
 }
 
-int* getDetailsFromUser(char name[], int *n) {
+int** getDetailsFromUser(char name[], int *n) {
 	getName(name);
 	printf("enter 2 - 2x2 game / 4 - 4x4 game / enter size(3 for 3x3)\n: ");
 	scanf("%d", n);
 	int t = *n;
-	int *a = (int *)calloc((t)*(t), sizeof(int));
+	int **a = (int **)calloc(t, sizeof(int *));
+	for (int i = 0; i < t; i++) {
+		a[i] = (int *)calloc(t, sizeof(int));
+	}
 	return a;
 }
 
 void generateNewGame() { //when a user looses and wants to play once again then we send some char c( other than '\0') so that his name wont be asked once again
 	char name[20];
-	int n, *a;
+	int n, **a;
 	a = getDetailsFromUser(name, &n);
-	printf("i%si", name);
+	printGame(name, 0, n, a);
 	generateOneRandomly(a, n);
 	generateOneRandomly(a, n);
 	playGame(name, a, 0, n); //initially moves are 0 so sending 0
@@ -44,7 +47,7 @@ void generateNewGame() { //when a user looses and wants to play once again then 
 
 void generateOldGame() {
 	char name[20];
-	int *a, moves, n;
+	int **a, moves, n;
 	a = getStateFromFile(name, &moves, &n);
 	if (moves == -1) {
 		printf("\nno game is saved till now\nplease play a game and then save\n");
@@ -72,13 +75,13 @@ void getLeaderBoard() {
 	startGame();
 }
 
-void printGame(char name[], int moves, int n, int *a) {
+void printGame(char name[], int moves, int n, int **a) {
 	printf("\n\n\t\t");
 	printf("name : %s\t\ttype of board : %d x %d\n\n\t\t", name, n, n);
 	printf("moves : %d\n\n\t\t\t\t", moves);
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < n; j++) {
-			printf("%d\t", *(a + (i*n) + j));
+			printf("%d\t", a[i][j]);
 		}
 		printf("\n\t\t\t\t");
 	}
@@ -135,7 +138,7 @@ char* getDate(char *date) {
 	return date;
 }
 
-void storeUser(char name[], int *a, int moves, int board) {
+void storeUser(char name[], int **a, int moves, int board) {
 	char *date = NULL;
 	date = getDate(date);
 	storeInFile(name, moves, board, date);
@@ -143,21 +146,19 @@ void storeUser(char name[], int *a, int moves, int board) {
 	printf("\t\twoo-ohh congrats you have won the game in %d moves\n", moves);
 }
 
-void playGame(char name[], int *a, int moves, int n) {
+void playGame(char name[], int **a, int moves, int n) {
 	int c;
 	while (true) {
 		system("cls");
 		printGame(name, moves, n, a);
 		if (won(a, n)) {
 			storeUser(name, a, moves, n);
-			system("cls");
 			startGame();
 			break;
 		}
 		if (furtherMovePossible(a, n) == false) {
 			printf("\n\t\tGame Over - you've lost in %d moves\n", moves);
 			removeContentsOfResumeGame();
-			system("cls");
 			startGame();
 			break;
 		}
@@ -171,21 +172,21 @@ void playGame(char name[], int *a, int moves, int n) {
 	}
 }
 
-void generateOneRandomly(int *a, int n) { //generates 1 at a random position
+void generateOneRandomly(int **a, int n) { //generates 1 at a random position
 	srand(time(0));
 	int i = rand() % n, j = rand() % n;
-	while (*(a + i*n + j) != 0) {
+	while (a[i][j] != 0) {
 		i = rand() % n;
 		j = rand() % n;
 	}
-	*((a + i*n) + j) = 1;
+	a[i][j] = 1;
 }
 
-bool won(int *a, int n) {
+bool won(int **a, int n) {
 	int win = 2 * n * n;
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < n; j++) {
-			if (*((a + i*n) + j) == win) {
+			if (a[i][j] == win) {
 				return true;
 			}
 		}
@@ -193,22 +194,22 @@ bool won(int *a, int n) {
 	return false;
 }
 
-bool mergebleByElementRightToCurrentEle(int *a, int n, int i, int j) {
-	if (j != n - 1 && isMergeble(*((a + i*n) + j), *((a + i*n) + j + 1)))
+bool mergebleByElementRightToCurrentEle(int **a, int n, int i, int j) {
+	if (j != n - 1 && isMergeble(a[i][j], a[i][j + 1]))
 		return true;
 	return false;
 }
 
-bool mergebleByElementDownToCurrentEle(int *a, int n, int i, int j) {
-	if (i != n - 1 && isMergeble(*((a + i*n) + j), *((a + (i + 1)*n) + j)))
+bool mergebleByElementDownToCurrentEle(int **a, int n, int i, int j) {
+	if (i != n - 1 && isMergeble(a[i][j], a[i + 1][j]))
 		return true;
 	return false;
 }
 
-bool furtherMovePossible(int *a, int n) {
+bool furtherMovePossible(int **a, int n) {
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < n; j++) {
-			if (*(a + i*n + j) == 0)  //this is if atleast one 0 is there then a move is possible so return true
+			if (a[i][j] == 0)  //this is if atleast one 0 is there then a move is possible so return true
 				return true;
 			else if (i == n - 1 && j == n - 1)
 				return false;

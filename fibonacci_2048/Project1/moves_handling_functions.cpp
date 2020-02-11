@@ -1,6 +1,6 @@
 #include "function_declarations.h"
 
-int handleInputs(char name[], int moves, int n, int *a) {
+int handleInputs(char name[], int moves, int n, int **a) {
 	char c;
 	printf("enter w - UP / s - DOWN / d - RIGHT / a - LEFT\n\t\t\t any key to exit \n\t\t\tgame is saved automatically Don't worry \n: ");
 	scanf(" %c", &c);
@@ -16,104 +16,103 @@ int handleInputs(char name[], int moves, int n, int *a) {
 	return 0;
 }
 
-void removeZeroesOfColumnsForDownMove(int *a, int n) {
+void removeZeroesOfColumnsForDownMove(int **a, int n) {
 	int j = n - 1;
 	for (int k = 0; k<n; k++) { //this gives a coloumn number in every iteration
 		j = n - 1;
 		for (int i = n - 1; i >= 0; i--) { //this is for row index
-			if (*(a + i*n + k) != 0) {
-				*(a + j*n + k) = *(a + i*n + k);
+			if (a[i][j] != 0) {
+				a[j][k] = a[i][k];
 				j--;
 			}
 		}
 		while (j >= 0) {
-			*(a + j*n + k) = 0;
+			a[j][k] = 0;
 			j--;
 		}
 	}
 }
 
-void removeZeroesOfColumnsForUpMove(int *a, int n) {
+void removeZeroesOfColumnsForUpMove(int **a, int n) {
 	int j = 0;
 	for (int k = 0; k<n; k++) { //this gives a coloumn number in every iteration
 		j = 0;
 		for (int i = 0; i<n; i++) { //this is for row index
-			if (*(a + i*n + k) != 0) {
-				*(a + j*n + k) = *(a + i*n + k);
+			if (a[i][k] != 0) {
+				a[j][k] = a[i][k];
 				j++;
 			}
 		}
 		while (j<n) {
-			*(a + j*n + k) = 0;
+			a[j][k] = 0;
 			j++;
 		}
 	}
 }
 
-void removeZeroesOfaRowLeftMove(int *a, int n) {
+void removeZeroesOfaRowLeftMove(int **a, int n) {
 	int j = 0;
 	for (int k = 0; k<n; k++) {		//this gives a coloumn number in every iteration
 		j = 0;
 		for (int i = 0; i<n; i++) { //this is for row 
-			if (*(a + k*n + i) != 0) {
-				*(a + k*n + j) = *(a + k*n + i);
+			if (a[k][i] != 0) {
+				a[k][j] = a[k][i];
 				j++;
 			}
 		}
 		while (j<n) {
-			*(a + k*n + j) = 0;
+			a[k][j] = 0;
 			j++;
 		}
 	}
 }
 
 
-void removeZeroesOfaRowRightMove(int *a, int n) {
+void removeZeroesOfaRowRightMove(int **a, int n) {
 	int j;
 	for (int k = 0; k<n; k++) {		//this gives a coloumn number in every iteration
 		j = n - 1;
 		for (int i = n - 1; i >= 0; i--) { //this is for row 
-			if (*(a + k*n + i) != 0) {
-				*(a + k*n + j) = *(a + k*n + i);
+			if (a[k][i] != 0) {
+				a[k][j] = a[k][i];
 				j--;
 			}
 		}
 		while (j >= 0) {
-			*(a + k*n + j) = 0;
+			a[k][j] = 0;
 			j--;
 		}
 	}
 }
 
-void downMove(int *a, int n) { // gets triggered when user choses DOWN move
+void downMove(int **a, int n) { // gets triggered when user choses DOWN move
 	removeZeroesOfColumnsForDownMove(a, n);
 	int k = n - 1, l = n - 2;
 	while (l >= 0) {
 		for (int i = 0; i < n; i++) {
-			if (isMergeble(*((a + l*n) + i), *((a + k*n) + i))) {
+			if (isMergeble(a[l][i], a[k][i])) {
 				shiftdown(a, i, k, l, n);
 			}
 		}
-
 		k--;
 		l--;
 	}
 }
 
-void shiftdown(int *a, int col, int k, int l, int n) { // shifts down the tiles by 1
-	*((a + k*n) + col) += *((a + l*n) + col);
+void shiftdown(int **a, int col, int k, int l, int n) { // shifts down the tiles by 1
+	a[k][col] += a[l][col];
 	for (int i = l; i > 0; i--) {
-		*((a + i*n) + col) = *((a + (i - 1)*n) + col);
+		a[i][col] = a[i-1][col];
 	}
-	*((a + 0 * n) + col) = 0;
+	a[0][col] = 0;
 }
 
-void upMove(int *a, int n) { // gets triggered when user choses UP move
+void upMove(int **a, int n) { // gets triggered when user choses UP move
 	removeZeroesOfColumnsForUpMove(a, n);
 	int k = 0, l = 1;
 	while (l < n) {
 		for (int i = 0; i < n; i++) {
-			if (isMergeble(*((a + l*n) + i), *((a + k*n) + i))) {
+			if (isMergeble(a[l][i], a[k][i])) {
 				shiftUp(a, i, k, l, n);
 			}
 		}
@@ -122,20 +121,20 @@ void upMove(int *a, int n) { // gets triggered when user choses UP move
 	}
 }
 
-void shiftUp(int *a, int col, int k, int l, int n) { // shifts up the tiles by 1
-	*((a + k*n) + col) += *((a + l*n) + col);
+void shiftUp(int **a, int col, int k, int l, int n) { // shifts up the tiles by 1
+	a[k][col] += a[l][col];
 	for (int i = l; i < n - 1; i++) {
-		*((a + i*n) + col) = *((a + (i + 1)*n) + col);
+		a[i][col] = a[i+1][col];
 	}
-	*((a + (n - 1)*n) + col) = 0;
+	a[n-1][col] = 0;
 }
 
-void leftMove(int *a, int n) {  // gets triggered when user choses LEFT move
+void leftMove(int **a, int n) {  // gets triggered when user choses LEFT move
 	removeZeroesOfaRowLeftMove(a, n);
 	int k = 0, l = 1;
 	while (l < n) {
 		for (int i = 0; i < n; i++) {
-			if (isMergeble(*((a + i*n) + l), *((a + i*n) + k))) {
+			if (isMergeble(a[i][l], a[i][k])) {
 				shiftLeft(a, i, k, l, n);
 			}
 		}
@@ -144,20 +143,20 @@ void leftMove(int *a, int n) {  // gets triggered when user choses LEFT move
 	}
 }
 
-void shiftLeft(int *a, int row, int k, int l, int n) { // shifts left the tiles by 1
-	*((a + row*n) + k) += *((a + row*n) + l);
+void shiftLeft(int **a, int row, int k, int l, int n) { // shifts left the tiles by 1
+	a[row][k] += a[row][l];
 	for (int i = l; i < n - 1; i++) {
-		*((a + row*n) + i) = *((a + row*n) + i + 1);
+		a[row][i] = a[row][i+1];
 	}
-	*((a + row*n) + n - 1) = 0;
+	a[row][n-1] = 0;
 }
 
-void rightMove(int *a, int n) { // gets triggered when user choses RIGHT move
+void rightMove(int **a, int n) { // gets triggered when user choses RIGHT move
 	removeZeroesOfaRowRightMove(a, n);
 	int k = n - 1, l = n - 2;
 	while (l >= 0) {
 		for (int i = 0; i < n; i++) {
-			if (isMergeble(*((a + i*n) + l), *((a + i*n) + k))) {
+			if (isMergeble(a[i][l], a[i][k])) {
 				shiftRight(a, i, k, l, n);
 			}
 		}
@@ -166,10 +165,10 @@ void rightMove(int *a, int n) { // gets triggered when user choses RIGHT move
 	}
 }
 
-void shiftRight(int *a, int row, int k, int l, int n) { // shifts right the tiles by 1
-	*((a + row*n) + k) += *((a + row*n) + l);
+void shiftRight(int **a, int row, int k, int l, int n) { // shifts right the tiles by 1
+	a[row][k] += a[row][l];
 	for (int i = l; i > 0; i--) {
-		*((a + row*n) + i) = *((a + row*n) + i - 1);
+		a[row][i] = a[row][i-1];
 	}
-	*((a + row*n) + 0) = 0;
+	a[row][0] = 0;
 }

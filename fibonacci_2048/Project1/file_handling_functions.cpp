@@ -7,7 +7,7 @@ void removeContentsOfResumeGame() { //used just to remove data of resume game
 void getNameFromFile(FILE *fp, char name[]) { //stores the string from current fp position to name
 	int k = 0;
 	char c;
-	fseek(fp, 21, SEEK_CUR);
+	//fseek(fp, 21, SEEK_CUR);
 	c = fgetc(fp);
 	while (c != ' ') {
 		name[k++] = c;
@@ -68,11 +68,11 @@ void storeNumberInFile(FILE *fp, int m, int ten_pow, int n) {
 	}
 }
 
-void storeStringInFile(FILE *fp, int n, char date[]) {
+void storeStringInFile(FILE *fp, int n, char str[]) {
 	int k = 0;
 	while (n--) {
-		if (date[k] != '\0') {
-			fputc(date[k++], fp);
+		if (str[k] != '\0') {
+			fputc(str[k++], fp);
 		}
 		else fputc(' ', fp);
 	}
@@ -96,8 +96,8 @@ void insertToFileFromThatPos(FILE *fp, char name[], int moves, int board, char d
 		c = fgetc(fp);
 	}
 	fseek(fp, -(k + 1), SEEK_CUR);
+	storeStringInFile(fp, 21, name); 
 	storeStringInFile(fp, 21, date);
-	storeStringInFile(fp, 21, name);
 	storeNumberInFile(fp, moves, pow(10, no_of_digits(moves) - 1), 4);
 	storeNumberInFile(fp, board, pow(10, no_of_digits(board) - 1), 3);
 	fputc('\n', fp);
@@ -105,7 +105,7 @@ void insertToFileFromThatPos(FILE *fp, char name[], int moves, int board, char d
 	fclose(fp);
 }
 
-void saveStateToFile(char name[], int moves, int board, int *a) {
+void saveStateToFile(char name[], int moves, int board, int **a) {
 	moves--;
 	FILE *fp = fopen("fib_state.txt", "w");
 	int k = 0;
@@ -121,16 +121,16 @@ void saveStateToFile(char name[], int moves, int board, int *a) {
 	fputc(' ', fp);
 	for (int i = 0; i<board; i++) {
 		for (int j = 0; j<board; j++) {
-			fputc(*((a + i*board) + j) + 48, fp);
+			fputc(a[i][j] + 48, fp);
 			fputc(' ', fp);
 		}
 	}
 	fclose(fp);
 }
 
-int* getStateFromFile(char name[], int *moves, int *board) {
+int** getStateFromFile(char name[], int *moves, int *board) {
 	FILE *fp;
-	int *a=NULL;
+	int **a = NULL;
 	char c;
 	if (!(fp = fopen("fib_state.txt", "r"))) {
 		*moves = -1;
@@ -139,22 +139,23 @@ int* getStateFromFile(char name[], int *moves, int *board) {
 	if (c == EOF)
 		*moves = -1;
 	else {
-		fseek(fp, -1, SEEK_CUR);
 		int k = 0;
-		char c = fgetc(fp);
 		while (c != ' ') {
 			name[k++] = c;
 			c = fgetc(fp);
 		}
+		name[k] = '\0';
 		*moves = getANumberFromFile(fp);
 		*board = getANumberFromFile(fp);
 		int t = *board;
-		a = (int *)calloc((t)*(t), sizeof(int));
-		for (int i = 0; i<*board; i++) {
-			for (int j = 0; j<*board; j++) {
+		a = (int **)calloc(t, sizeof(int*));
+		for (int i = 0; i<t; i++) {
+			a[i] = (int *)calloc(t, sizeof(int));
+			for (int j = 0; j<t; j++) {
 				c = fgetc(fp);
-				*((a + i*(*board)) + j) = c - 48;
+				a[i][j] = c - 48;
 				c = fgetc(fp);
+				printf("%c ",c);
 			}
 		}
 	}
